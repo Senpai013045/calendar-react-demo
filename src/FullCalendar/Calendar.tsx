@@ -18,7 +18,7 @@ const FullCalendar: React.FC<FullCalendarProps> = ({ days }) => {
         )}
         tileClassName={(props) => {
           const day = days.find((day) => {
-            return day.date === props.date.toISOString().slice(0, 10);
+            return day.date === props.date.toLocaleDateString();
           });
           if (day?.availability === "available") {
             return [styles.tile, styles.available];

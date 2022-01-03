@@ -28,8 +28,11 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (selectedDates.length === 0) {
+      return;
+    }
 
-    const dates = selectedDates.map((date) => date.toISOString().slice(0, 10));
+    const dates = selectedDates.map((date) => date.toLocaleDateString());
 
     const formattedTimes = times
       .filter((t) => t[0] !== "" || t[1] !== "")
@@ -54,15 +57,15 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
     setAvailability("available");
   };
 
-  const handleDayClick: DayPickerProps["onDayClick"] = (day, { selected }) => {
+  const handleDayClick: DayPickerProps["onDayClick"] = (day) => {
     const clonedSelectedDays = [...selectedDates];
-    if (selected) {
-      const selectedIndex = selectedDates.findIndex((selectedDay) =>
-        DateUtils.isSameDay(selectedDay, day)
-      );
-      selectedDates.splice(selectedIndex, 1);
-    } else {
+    const selectedIndex = selectedDates.findIndex((selectedDay) =>
+      DateUtils.isSameDay(selectedDay, day)
+    );
+    if (selectedIndex === -1) {
       clonedSelectedDays.push(day);
+    } else {
+      clonedSelectedDays.splice(selectedIndex, 1);
     }
     setSelectedDates(clonedSelectedDays);
   };
@@ -111,7 +114,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
         <br />
         {times.map(([startTime, endTime], index) => {
           return (
-            <div>
+            <div key={index}>
               from{" "}
               <input
                 type="time"

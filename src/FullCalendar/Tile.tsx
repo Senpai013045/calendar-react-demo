@@ -11,7 +11,7 @@ export const Tile: React.FC<TileProps> = ({ tileProperties, days }) => {
   if (tileProperties.view !== "month") {
     return <div className={styles.tile}></div>;
   }
-  const time = tileProperties.date.toISOString().slice(0, 10);
+  const time = tileProperties.date.toLocaleDateString();
 
   const day = days.find((day) => {
     return day.date === time;
